@@ -35,7 +35,7 @@ class E2DSR(nn.Module):
                 nn.Conv2d(64, 64*scale_factor**2, kernel_size=3, stride=1, padding=1),
                 nn.PixelShuffle(scale_factor)
             )
-        self.edgelayer = HQNet(self.edgechannel, self.scale_factor)
+        self.edgelayer = EFE(self.edgechannel, self.scale_factor)
         self.out = nn.Conv2d(64, num_channels, kernel_size=3, stride=1, padding=1)
         
     
@@ -67,10 +67,10 @@ class ResidualBlock(nn.Module):
         return x + self.block(x)
 
 ##########################################EdgeFeatureEnhancementBlock##########################################
-class HQNet(nn.Module):
+class EFE(nn.Module):
     def __init__(self, num_channels, scale):
         
-        super(HQNet, self).__init__()
+        super(EFE, self).__init__()
         self.path1 = nn.Sequential(
             nn.Upsample(size=None, scale_factor=scale, mode='nearest', align_corners=None, recompute_scale_factor=None),
             nn.BatchNorm2d(num_channels),
